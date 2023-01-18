@@ -92,8 +92,10 @@ module.exports = {
           </body>
         </html>
         `
+        
+        let image = undefined
         try {
-            const image = await nodeHtmlToImage({
+            image = await nodeHtmlToImage({
                 html: _htmlTemplate,
                 quality: 100,
                 type: 'png',
@@ -105,10 +107,18 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+        if (image === undefined) {
+            await interaction.editReply({
+                content: "There was an error : Contact Dirk#8540"
+            }).catch(err => console.log(err))
 
-        await interaction.editReply({
-            files: [new AttachmentBuilder(image, { name: `${name}.png` })]
-        }).catch(err => console.log(err))
+        } else {
+            await interaction.editReply({
+                files: [new AttachmentBuilder(image, { name: `${name}.png` })]
+            }).catch(err => console.log(err))
+
+        }
+
     }
 }
 
