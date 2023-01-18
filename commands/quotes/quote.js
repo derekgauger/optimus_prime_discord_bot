@@ -93,21 +93,18 @@ module.exports = {
         </html>
         `
         
-        let image = undefined
-        try {
-            image = await nodeHtmlToImage({
-                html: _htmlTemplate,
-                quality: 100,
-                type: 'png',
-                puppeteerArgs: {
-                    args: ['--no-sandbox'],
-                },
-                encoding: 'buffer',
-            })
-        } catch (error) {
-            console.log(error)
-        }
-        if (image === undefined) {
+
+        const image = await nodeHtmlToImage({
+            html: _htmlTemplate,
+            quality: 100,
+            type: 'png',
+            puppeteerArgs: {
+                args: ['--no-sandbox'],
+            },
+            encoding: 'buffer',
+        })
+
+        if (image === undefined || image === null) {
             await interaction.editReply({
                 content: "There was an error : Contact Dirk#8540"
             }).catch(err => console.log(err))
