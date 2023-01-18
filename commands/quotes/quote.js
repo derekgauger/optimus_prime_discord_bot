@@ -47,14 +47,13 @@ module.exports = {
             }
         }
 
-        
+
         const _htmlTemplate = `<!DOCTYPE html>
         <html lang="en">
           <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
             <style>
             
             body {
@@ -92,7 +91,6 @@ module.exports = {
           </body>
         </html>
         `
-        
 
         const image = await nodeHtmlToImage({
             html: _htmlTemplate,
@@ -104,19 +102,8 @@ module.exports = {
             encoding: 'buffer',
         })
 
-        if (image === undefined || image === null) {
-            await interaction.editReply({
-                content: "There was an error : Contact Dirk#8540"
-            }).catch(err => console.log(err))
-
-        } else {
-            await interaction.editReply({
-                files: [new AttachmentBuilder(image, { name: `${name}.png` })]
-            }).catch(err => console.log(err))
-
-        }
-
+        await interaction.editReply({
+            files: [new AttachmentBuilder(image, { name: `${name}.png` })]
+        }).catch(err => console.log(err))
     }
 }
-
-
