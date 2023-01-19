@@ -1,13 +1,24 @@
 const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, AttachmentBuilder } = require('discord.js')
 const GoogleImages = require('google-images');
+const SerpApi = require("google-search-results-nodejs");
+const search = new SerpApi.GoogleSearch(process.env.API_KEY);
 const nodeHtmlToImage = require('node-html-to-image')
 
 require('../../functions/discord_messages/createInfo')
 
-API_KEY = "AIzaSyBzGrEpB8KAZPFes6UdvolT7jXWcB6zXuY"
-SEARCH_ENGINE_ID = "cb6bd904687d57c4e"
+const searchQuery = "nature wallpaper light";
 
-const googleClient = new GoogleImages(SEARCH_ENGINE_ID, API_KEY);
+const params = {
+  q: searchQuery, // what we want to search
+  engine: "google", // search engine
+  hl: "en", // parameter defines the language to use for the Google search
+  tbm: "isch", // parameter defines the type of search you want to do (isch - Google Images)
+};
+
+// API_KEY = "AIzaSyBzGrEpB8KAZPFes6UdvolT7jXWcB6zXuY"
+// SEARCH_ENGINE_ID = "cb6bd904687d57c4e"
+
+// const googleClient = new GoogleImages(SEARCH_ENGINE_ID, API_KEY);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,10 +34,10 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const images = await googleClient.search('nature wallpaper light', {page: Math.floor(Math.random()*10)})
-
-        const current_image = images[Math.floor(Math.random()*images.length)]
-
+        const images = await getResults()
+        const randomImageNum = Math.floor(Math.random()*images.length)
+        const current_image = images[randomImageNum]
+        
         let font_size = 45;
 
         if (100 < phrase.length) {
@@ -84,7 +95,7 @@ module.exports = {
             </head>
           <body>
           <div class="app">
-              <img width="800px" height="500px" style="object-fit: fill" src="${current_image.url}" />
+              <img width="800px" height="500px" style="object-fit: fill" src="${current_image.thumbnail}" />
               <div class="centered">"${phrase}"</br> - ${name}</div>
             
             </div>
@@ -107,3 +118,18 @@ module.exports = {
         }).catch(err => console.log(err))
     }
 }
+
+const getJson = () => {
+  return new Promise((resolve) => {
+    search.json(params, resolve);
+  });
+};
+
+const getResults = async () => {
+  const imagesResults = [];
+
+  const json = await getJson();
+  imagesResults.push(...json.images_results);
+
+  return imagesResults;
+};

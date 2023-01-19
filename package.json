@@ -19,6 +19,7 @@
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "google-images": "^2.1.0",
+    "google-search-results-nodejs": "^2.1.0",
     "node-html-to-image": "^3.2.4"
   }
 }
